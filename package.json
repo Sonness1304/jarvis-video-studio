@@ -6,10 +6,11 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
+    "test": "node scripts/run-tests.mjs",
     "video": "node src/cli.mjs",
     "start": "node src/editor-server.mjs",
-    "setup": "node scripts/setup-env.mjs"
+    "setup": "node scripts/setup-env.mjs",
+    "test:native": "RUN_ALL_TESTS=1 node scripts/run-tests.mjs"
   },
   "dependencies": {
     "gsap": "3.15.0",
