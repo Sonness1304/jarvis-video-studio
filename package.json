@@ -1,0 +1,29 @@
+{
+  "name": "jarvis-video-studio",
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "video": "node src/cli.mjs",
+    "start": "node src/editor-server.mjs",
+    "setup": "node scripts/setup-env.mjs"
+  },
+  "dependencies": {
+    "gsap": "3.15.0",
+    "hyperframes": "0.8.188",
+    "sharp": "0.35.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sonness1304/jarvis-video-studio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sonness1304/jarvis-video-studio/issues"
+  },
+  "homepage": "https://github.com/Sonness1304/jarvis-video-studio#readme",
+  "description": "Local code-driven video creation studio: script-to-shortform video engine with timeline editor, motion graphics, and voice synthesis",
+  "license": "MIT"
+}

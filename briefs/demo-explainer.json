@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-explainer",
+  "title": "How Code-Driven Video Works",
+  "preset": "explain",
+  "template": "explain-short",
+  "theme": "editorial",
+  "voice": "Hải Đăng",
+  "accent": "#3569cc",
+  "scenes": [
+    {
+      "id": "question",
+      "title": "Where Does Storytelling Begin?",
+      "visual": "script",
+      "hold": 0.5,
+      "phrases": [
+        {
+          "id": "phrase-0",
+          "text": "Every clear explainer video begins with one essential question."
+        }
+      ]
+    },
+    {
+      "id": "answer",
+      "title": "Voice Drives the Visuals",
+      "visual": "voice",
+      "hold": 0.5,
+      "phrases": [
+        {
+          "id": "phrase-1",
+          "text": "Code-driven timelines sync kinetic typography and graphics directly to audio cues."
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "title": "Preview, Polish, Export",
+      "visual": "output",
+      "hold": 1.0,
+      "phrases": [
+        {
+          "id": "phrase-2",
+          "text": "Inspect every frame locally, refine the rhythm, and export high-definition MP4."
+        }
+      ]
+    }
+  ]
+}

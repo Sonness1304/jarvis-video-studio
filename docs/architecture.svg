@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="cardGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#1D4ED8" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="cardGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#047857" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="cardGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#6D28D9" stop-opacity="0.05"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="480" fill="url(#bgGrad)" rx="16"/>
+
+  <g transform="translate(48, 40)">
+    <text x="0" y="24" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">Jarvis Video Studio Engine Pipeline</text>
+    <text x="0" y="48" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="13">Local script-to-shortform video engine with timeline sequencing, GSAP motion, and frame-accurate rendering</text>
+  </g>
+
+  <!-- Step 1: Input & Storyboard -->
+  <g transform="translate(48, 120)" filter="url(#shadow)">
+    <rect width="260" height="300" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+    <rect width="260" height="300" rx="12" fill="url(#cardGrad1)"/>
+    <circle cx="36" cy="36" r="16" fill="#3B82F6"/>
+    <text x="36" y="42" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="14" font-weight="700" text-anchor="middle">1</text>
+    <text x="64" y="41" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Script &amp; Storyboard</text>
+    
+    <g transform="translate(24, 76)" font-family="system-ui, sans-serif" font-size="13">
+      <rect width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="27" fill="#E2E8F0">Structured Brief (JSON)</text>
+      
+      <rect y="56" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="83" fill="#E2E8F0">Cue-Based Narration</text>
+
+      <rect y="112" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="139" fill="#E2E8F0">Template Styles &amp; Palettes</text>
+
+      <rect y="168" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="195" fill="#94A3B8">Asset Library &amp; Media</text>
+    </g>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M 316 270 L 344 270" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="4 4"/>
+
+  <!-- Step 2: Composition & Audio -->
+  <g transform="translate(352, 120)" filter="url(#shadow)">
+    <rect width="260" height="300" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+    <rect width="260" height="300" rx="12" fill="url(#cardGrad2)"/>
+    <circle cx="36" cy="36" r="16" fill="#10B981"/>
+    <text x="36" y="42" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="14" font-weight="700" text-anchor="middle">2</text>
+    <text x="64" y="41" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Motion &amp; Sound Engine</text>
+
+    <g transform="translate(24, 76)" font-family="system-ui, sans-serif" font-size="13">
+      <rect width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="27" fill="#E2E8F0">Timeline Alignment (Core)</text>
+
+      <rect y="56" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="83" fill="#E2E8F0">GSAP Motion Timelines</text>
+
+      <rect y="112" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="139" fill="#E2E8F0">Neural Voice / VieNeu TTS</text>
+
+      <rect y="168" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="195" fill="#94A3B8">Live HTML5 Canvas Preview</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M 620 270 L 648 270" stroke="#64748B" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Step 3: Renderer & Output -->
+  <g transform="translate(656, 120)" filter="url(#shadow)">
+    <rect width="256" height="300" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+    <rect width="256" height="300" rx="12" fill="url(#cardGrad3)"/>
+    <circle cx="36" cy="36" r="16" fill="#8B5CF6"/>
+    <text x="36" y="42" fill="#FFFFFF" font-family="system-ui, sans-serif" font-size="14" font-weight="700" text-anchor="middle">3</text>
+    <text x="64" y="41" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Deterministic Export</text>
+
+    <g transform="translate(22, 76)" font-family="system-ui, sans-serif" font-size="13">
+      <rect width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="27" fill="#E2E8F0">HyperFrames CLI Host</text>
+
+      <rect y="56" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="83" fill="#E2E8F0">Chromium Headless Frame Capturer</text>
+
+      <rect y="112" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="139" fill="#E2E8F0">FFmpeg Audio/Video Muxer</text>
+
+      <rect y="168" width="212" height="44" rx="6" fill="#0F172A" stroke="#334155"/>
+      <text x="12" y="195" fill="#38BDF8" font-weight="600">MP4 (H.264) + SRT Subtitles</text>
+    </g>
+  </g>
+</svg>

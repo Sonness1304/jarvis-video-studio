@@ -1,0 +1,8 @@
+{
+ "schemaVersion":1,"id":"smoke","title":"Một ý tưởng thành video","preset":"explain","voice":"Hải Đăng","accent":"#3569CC",
+ "scenes":[
+  {"id":"idea","title":"Bắt đầu từ lời kể","visual":"script","phrases":[{"id":"s1","text":"Một ý tưởng hay bắt đầu từ câu chuyện rõ ràng."}]},
+  {"id":"sound","title":"Lời đọc dẫn nhịp hình","visual":"voice","phrases":[{"id":"s2","text":"Giọng Việt, hình chuyển động và phụ đề đi cùng nhau."}]},
+  {"id":"movie","title":"Từ kịch bản đến video","visual":"render","phrases":[{"id":"s3","text":"Đây là bản thử đầu tiên của xưởng video Jarvis."}]}
+ ]
+}

@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import {execFileSync} from 'node:child_process';import {fileURLToPath} from 'node:url';
+import {asrExtractArgs} from '../src/dubbing-worker.mjs';import {fitAudioSlot} from '../src/dubbing-fit.mjs';import {validatePcmWav} from '../src/voice-workbench.mjs';
+const root=fileURLToPath(new URL('../',import.meta.url)),config=JSON.parse(await fs.readFile(path.join(root,'runtime-config.json'),'utf8')),ffmpeg=path.join(root,config.paths.ffmpeg);
+test('ASR extraction preserves one-second delayed audio relative to normalized video zero',async t=>{
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'dub-epoch-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));const source=path.join(dir,'source.mp4'),wav=path.join(dir,'source.wav');
+ execFileSync(ffmpeg,['-nostdin','-v','error','-f','lavfi','-i','color=s=16x16:r=30:d=4','-itsoffset','1','-f','lavfi','-i','sine=frequency=200:duration=3','-map','0:v','-map','1:a','-c:v','libx264','-bf','0','-c:a','aac','-t','4',source],{windowsHide:true,timeout:10000});
+ execFileSync(ffmpeg,['-nostdin','-v','error',...asrExtractArgs(source,4,0),wav],{windowsHide:true,timeout:10000});const bytes=await fs.readFile(wav);let offset=12,data;while(offset+8<=bytes.length){const size=bytes.readUInt32LE(offset+4);if(bytes.toString('ascii',offset,offset+4)==='data'){data=bytes.subarray(offset+8,offset+8+size);break;}offset+=8+size+(size%2);}assert.ok(data);let first=-1;for(let i=0;i<data.length/2;i++)if(Math.abs(data.readInt16LE(i*2))>100){first=i/16000;break;}assert.ok(first>.97&&first<1.04,'sound starts '+first);assert.equal(data.length/2,4*16000);
+});
+test('valid3.05s speech fits3s slot through measured atempo without cutting samples or exceeding1.1',async t=>{
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'dub-fit-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));const input=path.join(dir,'source.wav'),output=path.join(dir,'fit.wav');execFileSync(ffmpeg,['-nostdin','-v','error','-f','lavfi','-i','sine=frequency=200:duration=3.05','-ar','48000','-ac','1','-c:a','pcm_s16le',input],{windowsHide:true,timeout:10000});
+ const fit=await fitAudioSlot({ffmpeg,input,output,start:0,end:3,duration:3.05,approved:true,run:async(name,args)=>execFileSync(ffmpeg,['-nostdin','-v','error',...args],{windowsHide:true,timeout:10000})});assert.ok(fit.speed>=1&&fit.speed<=1.1);const actual=validatePcmWav(await fs.readFile(output));assert.ok(actual.samples<=144001);
+});
+test('3.27s speech at100Hz still fits3s near1.1 maximum after measured correction',async t=>{
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'dub-fit-limit-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));const input=path.join(dir,'source.wav'),output=path.join(dir,'fit.wav');execFileSync(ffmpeg,['-nostdin','-v','error','-f','lavfi','-i','sine=frequency=100:duration=3.27','-ar','48000','-ac','1','-c:a','pcm_s16le',input],{windowsHide:true,timeout:10000});
+ const fit=await fitAudioSlot({input,output,start:0,end:3,duration:3.27,approved:true,run:async(name,args)=>execFileSync(ffmpeg,['-nostdin','-v','error',...args],{windowsHide:true,timeout:10000})});assert.ok(fit.speed>=1.09&&fit.speed<=1.1);assert.ok(validatePcmWav(await fs.readFile(output)).samples<=144001);
+});

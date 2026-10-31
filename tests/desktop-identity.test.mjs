@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs/promises';import path from 'node:path';import os from 'node:os';
+const m=await import('../src/desktop-identity.mjs').catch(e=>{if(e.code==='ERR_MODULE_NOT_FOUND')return {};throw e;});
+test('one root identity canonicalizes Vietnamese Unicode/slashes and actual junction targets',async()=>{
+ assert.equal(typeof m.rootIdentity,'function');assert.equal(typeof m.normalizedRoot,'function');assert.equal(m.normalizedRoot('\\\\?\\C:\\Người Dùng\\'),m.normalizedRoot('c:/Người Dùng'.normalize('NFD')));
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'desktop-root-'));try{await fs.mkdir(path.join(root,'Một'));await fs.mkdir(path.join(root,'Hai'));await fs.symlink(path.join(root,'Một'),path.join(root,'link'),'junction');const first=m.rootIdentity(path.join(root,'link'));assert.equal(first.rootHash,m.rootIdentity(path.join(root,'Một')).rootHash);await fs.unlink(path.join(root,'link'));await fs.symlink(path.join(root,'Hai'),path.join(root,'link'),'junction');assert.notEqual(first.rootHash,m.rootIdentity(path.join(root,'link')).rootHash);assert.throws(()=>m.rootIdentity(path.join(root,'missing')));}finally{await fs.rm(root,{recursive:true,force:true});}
+});

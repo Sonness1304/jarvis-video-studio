@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import sharp from 'sharp';import {createHash} from 'node:crypto';import {startEditor} from '../src/editor-server.mjs';
+test('clip API uses session CSRF revision scene and server-owned source snapshot before starting work',async()=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'p72-api-'));await fs.mkdir(path.join(root,'web'));for(const name of ['index.html','p72.mjs','clip-request.mjs'])await fs.writeFile(path.join(root,'web',name),'test-'+name);
+ const imageId='jarvis-11111111-1111-4111-8111-111111111111',dir=path.join(root,'outputs',imageId);await fs.mkdir(dir,{recursive:true});const data=await sharp({create:{width:768,height:1024,channels:3,background:'teal'}}).png().toBuffer(),image={path:'outputs/'+imageId+'/image.png',sha256:createHash('sha256').update(data).digest('hex')};await fs.writeFile(path.join(root,image.path),data);await fs.writeFile(path.join(dir,'receipt.json'),JSON.stringify({id:imageId,clientId:imageId,receipt:'outputs/'+imageId+'/receipt.json',kind:'image',status:'VERIFIED',image}));
+ const s=await startEditor({root,port:0,voices:[{name:'Hải Đăng',aliases:[]}]});try{
+ for(const route of ['/api/ai/clip-status','/api/clips','/p72.mjs','/clip-request.mjs'])assert.equal((await fetch(s.url+route)).status,401);
+ const page=await fetch(s.url+'/'),cookie=page.headers.get('set-cookie').split(';')[0],boot=await(await fetch(s.url+'/api/bootstrap',{headers:{cookie}})).json(),headers={cookie,origin:s.url,'content-type':'application/json','x-studio-csrf':boot.csrf};
+ assert.equal((await fetch(s.url+'/p72.mjs',{headers:{cookie}})).status,200);
+ const p=await(await fetch(s.url+'/api/projects',{method:'POST',headers,body:JSON.stringify({id:'p72',template:'listicle',theme:'editorial',voice:'Hải Đăng'})})).json();let calls=0;s.jobs.start=async(kind,data)=>{calls++;return {kind,...data,status:'RUNNING'};};
+ const input={kind:'clip',projectId:'p72',expectedRevision:p.revision,sceneId:p.brief.scenes[0].id,request:{imageId,prompt:'robot moves'}},post=(v,h=headers)=>fetch(s.url+'/api/jobs',{method:'POST',headers:h,body:JSON.stringify(v)});
+ assert.equal((await post(input,{...headers,'x-studio-csrf':'bad'})).status,403);assert.equal((await post({...input,expectedRevision:0})).status,409);assert.equal((await post({...input,sceneId:'foreign'})).status,400);assert.equal((await post({...input,request:{...input.request,path:'arbitrary'}})).status,400);assert.equal(calls,0);
+ const response=await post(input),body=await response.json();assert.equal(response.status,202);assert.equal(body.clipRequest.source.image.sha256,image.sha256);assert.equal(body.sceneId,input.sceneId);assert.equal(calls,1);
+ s.jobs.records.set('job-not-sealed',{id:'job-not-sealed',kind:'clip',status:'VERIFIED'});assert.deepEqual(await(await fetch(s.url+'/api/clips',{headers:{cookie}})).json(),[]);
+ assert.equal((await fetch(s.url+'/api/clips/job-not-sealed/import',{method:'POST',headers,body:'{}'})).status,400);assert.equal((await fetch(s.url+'/api/clips/job-not-sealed/import',{method:'POST',headers:{...headers,'x-studio-csrf':'bad'},body:'{}'})).status,403);
+ }finally{await s.close();}
+});

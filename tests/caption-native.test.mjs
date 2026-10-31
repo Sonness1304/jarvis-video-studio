@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs/promises';import {createHash} from 'node:crypto';import path from 'node:path';
+test('native captions preserve actual WAV/timestamps and regenerate exactly one speech override',{skip:process.env.JARVIS_P78_NATIVE!=='1'},async()=>{
+ const input=JSON.parse(await fs.readFile(process.env.JARVIS_P78_PROOF,'utf8')),read=(dir,name)=>fs.readFile(path.join(dir,name),'utf8'),hash=async file=>createHash('sha256').update(await fs.readFile(file)).digest('hex');
+ const [a,b,c]=await Promise.all(input.attempts.map(async dir=>({dir,receipt:JSON.parse(await read(dir,'receipt.json')),timeline:JSON.parse(await read(dir,'timeline.json')),tts:JSON.parse(await read(dir,'tts-result.json')),srt:await read(dir,'captions.srt')})));
+ for(const v of [a,b,c]){assert.equal(v.receipt.status,'VERIFIED');assert.equal(v.receipt.source.dirty,false);assert.equal(v.receipt.mediaApiRequests,0);assert.ok(v.timeline.phrases.every(p=>p.samples>0&&p.sampleRate===48000));assert.equal(await hash(path.join(v.dir,'video.mp4')),v.receipt.artifacts.video.sha256);}
+ assert.equal(b.receipt.generatedPhrases,0);assert.equal(b.receipt.cachedPhrases,3);assert.equal(c.receipt.generatedPhrases,1);assert.equal(c.receipt.cachedPhrases,2);
+ assert.deepEqual(a.timeline.phrases.map(p=>[p.id,p.sha256,p.samples,p.start,p.end]),b.timeline.phrases.map(p=>[p.id,p.sha256,p.samples,p.start,p.end]));assert.equal(await hash(path.join(a.dir,'master.wav')),await hash(path.join(b.dir,'master.wav')));
+ assert.deepEqual(a.srt.match(/\d\d:\d\d:\d\d,\d{3} --> .+/g),b.srt.match(/\d\d:\d\d:\d\d,\d{3} --> .+/g));assert.match(b.srt,/AI\ngiúp kể chuyện/);assert.ok(!b.srt.includes('<span'));
+ assert.notEqual(a.timeline.phrases[0].sha256,c.timeline.phrases[0].sha256);assert.equal(a.timeline.phrases[1].sha256,c.timeline.phrases[1].sha256);assert.equal(a.timeline.phrases[2].sha256,c.timeline.phrases[2].sha256);assert.equal(b.timeline.phrases[0].text,'AI giúp kể chuyện bằng hình ảnh.');
+});

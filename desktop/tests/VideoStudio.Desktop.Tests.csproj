@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0-windows</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><EnableWindowsTargeting>true</EnableWindowsTargeting></PropertyGroup>
+  <ItemGroup><Compile Include="../DesktopContracts.cs" Link="DesktopContracts.cs" Condition="Exists('../DesktopContracts.cs')"/><Compile Include="../BackendConnection.cs" Link="BackendConnection.cs" Condition="Exists('../BackendConnection.cs')"/></ItemGroup>
+</Project>

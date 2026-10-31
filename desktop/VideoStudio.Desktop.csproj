@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWindowsForms>true</UseWindowsForms><RuntimeIdentifier>win-x64</RuntimeIdentifier><SelfContained>false</SelfContained><AssemblyName>Jarvis Video Studio</AssemblyName><RootNamespace>VideoStudio.Desktop</RootNamespace><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable><ApplicationIcon>Assets/studio.ico</ApplicationIcon><RestorePackagesWithLockFile>true</RestorePackagesWithLockFile><Version>0.1.0</Version>
+  </PropertyGroup>
+  <ItemGroup><Compile Remove="tests/**/*.cs"/><PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31"/><Content Include="Assets/studio.ico" CopyToOutputDirectory="PreserveNewest"/><Content Include="LICENSES/**/*" CopyToOutputDirectory="PreserveNewest"/></ItemGroup>
+  <!-- This WinForms shell does not use the WPF reference added by the SDK package. -->
+  <Target Name="ExcludeUnusedWebViewWpf" BeforeTargets="ResolveAssemblyReferences"><ItemGroup><Reference Remove="@(Reference)" Condition="'%(Reference.Filename)' == 'Microsoft.Web.WebView2.Wpf'"/></ItemGroup></Target>
+</Project>

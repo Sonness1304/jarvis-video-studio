@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "paths": {
+    "python": "python",
+    "ffmpeg": "ffmpeg",
+    "ffprobe": "ffprobe",
+    "chrome": "chrome",
+    "renderer": "node_modules/hyperframes/dist/cli.js",
+    "gsap": "node_modules/gsap/dist/gsap.min.js",
+    "fontRegular": "assets/fonts/BeVietnamPro-Regular.ttf",
+    "fontBold": "assets/fonts/BeVietnamPro-Bold.ttf",
+    "fontBlack": "assets/fonts/BeVietnamPro-Black.ttf",
+    "voices": "assets/voices_v3_turbo.json"
+  },
+  "note": "Copy to runtime-config.json and set paths to local tools or rely on auto-detection"
+}

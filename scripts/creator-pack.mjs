@@ -1,0 +1,4 @@
+import fs from 'node:fs/promises';import {fileURLToPath} from 'node:url';
+import {safeChild} from '../src/core.mjs';import {createCreatorPack,verifyCreatorPack} from '../src/creator-pack.mjs';
+const root=fileURLToPath(new URL('../',import.meta.url));
+try{const [output,metadata,qa,...extra]=process.argv.slice(2);if(output==='verify'&&metadata&&!qa&&!extra.length){console.log(JSON.stringify(await verifyCreatorPack(root,metadata)));}else{if(!output||!metadata||!qa||extra.length)throw Error('USAGE: node scripts/creator-pack.mjs OUTPUT_FOLDER METADATA_JSON QA_JSON');const m=JSON.parse(await fs.readFile(safeChild(root,metadata),'utf8'));const pack=await createCreatorPack(root,output,m,{qaFile:qa});console.log(JSON.stringify({status:'VERIFIED',publicationStatus:pack.publicationStatus,path:pack.path,files:pack.files.length,manifestSha256:pack.manifestSha256}));}}catch(e){console.log(JSON.stringify({status:'FAILED',error:e.message}));process.exitCode=1;}
